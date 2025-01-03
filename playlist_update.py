@@ -12,7 +12,7 @@ import re, datetime
 pgrm_signature = "playlist_update.py: "
 SECRET_DATABASE = 'setup.json'
 
-def sendOff(msg=None): 
+async def sendOff(msg, spotify_id): 
     tracks = []
 
     pgrm_signature = "playlist_update.py: "
@@ -26,29 +26,20 @@ def sendOff(msg=None):
     sp = refresh_sp(init_spotify_flag)
 
     # Get the playlist link associated with the channel
-    playlist_link = channel_tools.return_playlist_from_channel(sent_channel=msg.channel.id, playlist_channel=playlist_channel)
-    
-    # Get the song link from within the message
-    song_link = song_link_extract(msg)
-
-    # Returns uri link format
-    song_uri = link_clean(song_link)
-
-    # Gets song id
-    song_id = return_song_id(song_uri)
+    playlist_link = channel_tools.return_playlist(sent_channel=msg.channel.id, playlist_channel=playlist_channel)
 
     # Get the playlist ID
-    playlist_ID = get_playlist_id(playlist_link)
+    playlist_ID = config_tools.getSpotifyID(playlist_link)
 
-    tracks.append(song_id)
+    tracks.append(spotify_id)
 
     # add the song to the playlist using the SP object
-    sp.playlist_add_items(playlist_ID, tracks)
+    sp.playlist_add_items(playlist_ID['id'], tracks)
     config_tools.logs(message=f'{pgrm_signature}: Playlist update {playlist_link} was sent and went through!')
     return f'{pgrm_signature}: Playlist update {playlist_link} was sent and went through!'
 
 
-def sendOffList(channel, msgList): 
+def sendOffList(channel, id_list): 
     tracks = []
     pgrm_signature = "playlist_update.py: "
 
@@ -61,23 +52,14 @@ def sendOffList(channel, msgList):
     sp = refresh_sp(init_spotify_flag)
 
     # Get the playlist link associated with the channel
-    playlist_link = channel_tools.return_playlist_from_channel(sent_channel=channel, playlist_channel=playlist_channel)
+    playlist_link = channel_tools.return_playlist(sent_channel=channel, playlist_channel=playlist_channel)
     
-    for msg in msgList:
-        # Get the song link from within the message
-        song_link = song_link_extract(msg)
-
-        # Returns uri link format
-        song_uri = link_clean(song_link)
-
-        # Gets song id
-        song_id = return_song_id(song_uri)
-
+    for id in id_list:
         # Get the playlist ID
         playlist_ID = get_playlist_id(playlist_link)
 
      
-        tracks.append(song_id)
+        tracks.append(id)
 
         # add the song to the playlist using the SP object
     sp.playlist_add_items(playlist_ID, tracks)
@@ -114,11 +96,9 @@ def get_playlist_duration(playlist_link):
     return duration_hours
 
 
-def link_clean(link: str) -> str:
-    # Split the link by "/" and take the last part (the ID)
-    track_id = link.split('/')[-1]
-    # Return the cleaned format
-    return f"spotify:track:{track_id}"
+def make_uri(id: str) -> str:
+    # Return the URI format
+    return f"spotify:track:{id}"
 
 def return_song_id(link: str) -> str:
     # Split by ':' to get the part after 'spotify:track:'

@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 import time, os
+import re
 
 def config_data(file='setup.json'):
     with open(file, 'r') as setupf:
@@ -39,7 +40,34 @@ def logs(message, log_file = r'logs/default.log', pgrm_signature = __file__):
     except FileNotFoundError as e:
         print("Please make sure file exists in logs/<your_file_name.log>: "+ str(type(e).__name__))
 
+# Returns the Spotify track or playlist ID from various URL types
+def getSpotifyID(url):
+    # Regex patterns for regular, uri, and shortened spotify links. AI code.
+    patterns = [
+        r'open\.spotify\.com/(track|playlist)/([a-zA-Z0-9]+)',
+        r'spotify:(track|playlist):([a-zA-Z0-9]+)',
+        r'spotify\.link/([a-zA-Z0-9]+)'
+    ]
 
+    for pattern in patterns:
+        match = re.search(pattern, url)
+        if match:
+            if len(match.groups()) == 2: # if both the content_type and spotify_id
+                content_type, spotify_id = match.groups()
+            else: # if only spotify
+                content_type = None
+                spotify_id = match.group(1)
+
+            return {
+                'type': content_type,
+                'id': spotify_id
+            }
+
+    # return none if spotify_ID not found
+    return {
+        'type': None,
+        'id': None
+    }
 
 def file_name(file_name = __file__):
     return(os.path.basename(file_name))
