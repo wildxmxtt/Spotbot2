@@ -126,7 +126,7 @@ async def search(ctx, arg = None):
 
     playlist_id_pattern = r"playlist/(.*?)\?"
     try:
-        playlist_regex_result = re.search(playlist_id_pattern, str(playlist_link[0]))
+        playlist_regex_result = re.search(playlist_id_pattern, str(playlist_link))
         playlist_id = str(playlist_regex_result.group(1))
     except AttributeError as e:
         print(f"\033[35m[!] {pgrm_signature}WARNING. Non-standard spotify playlist link detected. Attempting another playlist ID search with a new regex pattern...\033[0m")
@@ -599,6 +599,9 @@ async def on_message(msg):
                                     await msg.channel.send(duration)
                             
                             conn.close()
+                    else:
+                        await bot.process_commands(msg)
+
 
 
         else:
