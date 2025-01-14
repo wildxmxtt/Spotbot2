@@ -1,5 +1,5 @@
 # Spotbot 2
-A discord bot that scrapes users spotify links from a set channel and automatically adds those songs to a set spotify playlist. Think of it like and *over* engineered collaborative playlist.
+A discord bot that scrapes users spotify links from a set channel and automatically adds those songs to a set spotify playlist. Think of it like an *over* engineered collaborative playlist.
 
 
 ## Table of Contents
@@ -50,7 +50,7 @@ A discord bot that scrapes users spotify links from a set channel and automatica
     
     a. Add that link into setup.json in the correct field ex:"https://open.spotify.com/playlist/0XM....8226c884a3d" (needs to be a playlist you made on your own personal spotify account)
     
-4. All fields in setup.json should be filled out and look like refimage12
+4. All fields in `setup.json` should be filled out and look like refimage12. A template `setup.json` can be extracted from [`setup.zip`](https://github.com/wildxmxtt/spotbot2/blob/main/database.py).
 
 5. Install requrements.txt to your machine 
     
@@ -59,12 +59,17 @@ A discord bot that scrapes users spotify links from a set channel and automatica
     ```
     
 6. Run app.py (only needs to be done once)
-    a. In your terminal type flask run
+    
+    a. In your terminal type:
     ```cmd
     flask run
     ```
+    or host externally with:
+    ```cmd
+    flask run --host=0.0.0.0 --port=5000
+    ```
 
-    b. Go to https://localhost:5000
+    b. Go to https://localhost:5000 (or address of host)
     
     c. Login with your spotify username and password
     
@@ -91,7 +96,7 @@ A discord bot that scrapes users spotify links from a set channel and automatica
 ## Contributing
 If something is wrong, [Open an issue.](http://github.com/wildxmxtt/spotbot2/issues/new)
 
-This project exists thank to all the people who contribute.
+This project exists thanks to all the people who contribute.
 
 <a href="https://github.com/wildxmxtt/spotbot2/graphs/contributors"><img src="https://contrib.rocks/image?repo=wildxmxtt/spotbot2" /></a>
 

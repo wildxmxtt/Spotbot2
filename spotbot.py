@@ -89,7 +89,7 @@ async def sLink(ctx):
     playlist_channel = config_data['playlist_channel']
     playlist_link = channel_tools.return_playlist_from_channel(sent_channel=ctx.channel.id, playlist_channel=playlist_channel)
     #playlist_links = await channel_tools.return_playlists(playlist_channel=playlist_channel)
-    await ctx.reply(str(channel.name) + "'s playlist is:" + playlist_link + " Discord Channel ID: " + str(channel_ID))
+    await ctx.reply(f"**{str(channel.name)}'s** playlist is:\n\n{playlist_link}")
 
 @bot.command()
 async def search(ctx, arg = None):
@@ -152,10 +152,11 @@ async def sLinkAll(ctx):
     config_data = config_tools.config_data(SECRET_DATABASE)
     playlist_channel = config_data['playlist_channel']
 
-    links = "**Playlists:**\n"
+    links = "**All** Playlists:\n"
     for item in playlist_channel:
         try:
-            links += f"\n{str(item['playlist'])}"
+            channel = bot.get_channel(int(item['channel']))
+            links += f"\n**{str(channel.name)}**: {str(item['playlist'])}"
         except KeyError as e:
             print(f"Error! No playlist links found: {e}")
             await ctx.reply(f"No playlist links found.")
@@ -323,7 +324,7 @@ async def reactChamp(ctx):
 
         field_value = f"{message[1]} reaction(s) - "
 
-        field_value += f"[{nameAndArtist[0]} - {nameAndArtist[1]}]({message[2]})"
+        field_value += f"[{nameAndArtist[0]} - {nameAndArtist[1]}](https://open.spotify.com/track/{message[2]})"
 
         embed.add_field(name=f"{loops}. {member.display_name}", value=field_value, inline=False)
         loops += 1
@@ -398,7 +399,7 @@ async def localreactChamp(ctx):
 
                 field_value = f"{message[1]} reaction(s) - "
 
-                field_value += f"[{nameAndArtist[0]} - {nameAndArtist[1]}]({message[2]})"
+                field_value += f"[{nameAndArtist[0]} - {nameAndArtist[1]}](https://open.spotify.com/track/{message[2]})"
 
                 embed.add_field(name=f"{loops}. {member.display_name}", value=field_value, inline=False)
                 loops += 1
